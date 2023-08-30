@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+/* Reset some default styles */
+body, h1, p {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+main {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+form input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+form select[multiple] {
+    height: auto;
+}
+.checkbox-scroll-container {
+    max-height: 60px; /* Set the desired height for the scrollable area */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 10px;
+}
+
+form button {
+    display: block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    background-color: #f4f4f4;
+}
+</style>
+    <title>Doctor's Registration</title>
+</head>
+<body>
+    <header>
+        <h1>Doctor's Registration</h1>
+    </header>
+<!-- ... (previous code) ... -->
+<main>
+    <form id="registration-form">
+        <div class="form-message"></div>
+        
+        <label for="full-name">Full Name:</label>
+        <input type="text" id="full-name">
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email">
+        
+        <label for="specialization">Specialization:</label>
+        <input type="text" id="specialization">
+        
+        <label for="license-number">License Number:</label>
+        <input type="text" id="license-number">
+        
+        <label>Languages:</label>
+        <div id="language-checkboxes" class="checkbox-scroll-container">
+            <label><input type="checkbox" name="languages[]" value="english"> English</label>
+            <label><input type="checkbox" name="languages[]" value="spanish"> Spanish</label>
+            <label><input type="checkbox" name="languages[]" value="french"> French</label>
+            <label><input type="checkbox" name="languages[]" value="german"> German</label>
+            <!-- Add more checkboxes as needed -->
+        </div>
+        <label>Secondary Languages:</label>
+        <div id="slanguage-checkboxes" class="checkbox-scroll-container">
+            <label><input type="checkbox" name="slanguage[]" value="english"> English</label>
+            <label><input type="checkbox" name="slanguage[]" value="spanish"> Spanish</label>
+            <label><input type="checkbox" name="slanguage[]" value="french"> French</label>
+            <label><input type="checkbox" name="slanguage[]" value="german"> German</label>
+            <!-- Add more checkboxes as needed -->
+        </div>
+        
+        <button type="submit">Register</button>
+    </form>
+</main>
+<footer>
+    <p>&copy; 2023 Doctor's Registration</p>
+</footer>
+<script>
+
+<!-- ... (remaining code) ... -->
+document.addEventListener("DOMContentLoaded", function() {
+  const checkboxes = document.querySelectorAll("#language-checkboxes input[type='checkbox']");
+  
+  checkboxes.forEach(checkbox => {
+      checkbox.addEventListener("change", function() {
+          updateSelectedLanguages();
+      });
+  });
+  
+  function updateSelectedLanguages() {
+      const selectedLanguages = Array.from(checkboxes)
+          .filter(checkbox => checkbox.checked)
+          .map(checkbox => checkbox.value);
+
+      const selectedLanguagesDisplay = selectedLanguages.join(", ");
+      
+  }
+ 
+  
+});
+document.addEventListener("DOMContentLoaded", function() {
+  const checkboxes = document.querySelectorAll("#slanguage-checkboxes input[type='checkbox']");
+  
+  checkboxes.forEach(checkbox => {
+      checkbox.addEventListener("change", function() {
+          updateSelectedLanguages();
+      });
+  });
+  
+  function updateSelectedLanguages() {
+      const selectedLanguages = Array.from(checkboxes)
+          .filter(checkbox => checkbox.checked)
+          .map(checkbox => checkbox.value);
+
+      const selectedLanguagesDisplay = selectedLanguages.join(", ");
+      
+  }
+ 
+  
+});
+
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("registration-form");
+  const formMessage = document.querySelector(".form-message");
+
+  form.addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent the form from submitting normally
+      
+      // Reset form message and border colors
+      formMessage.textContent = "";
+      resetBorderColor(form.querySelectorAll("input"));
+
+      // Get form fields
+      const fullNameInput = form.querySelector("#full-name");
+      const emailInput = form.querySelector("#email");
+      const specializationInput = form.querySelector("#specialization");
+      const licenseNumberInput = form.querySelector("#license-number");
+      
+      const selectedLanguages = Array.from(form.querySelectorAll("input[name='languages[]']:checked"))
+          .map(checkbox => checkbox.value);
+      const sselectedLanguages = Array.from(form.querySelectorAll("input[name='slanguage[]']:checked"))
+          .map(checkbox => checkbox.value);
+      
+      // Validate form fields
+      if (!validateNotEmpty(fullNameInput) || 
+          !validateNotEmpty(emailInput) ||
+          !validateNotEmpty(specializationInput) ||
+          !validateNotEmpty(licenseNumberInput)) {
+          formMessage.textContent = "Please fill in all required fields.";
+          return;
+      }
+      
+      // Create a contact object
+      const contact = {
+          fullName: fullNameInput.value,
+          email: emailInput.value,
+          specialization: specializationInput.value,
+          licenseNumber: licenseNumberInput.value,
+          languages: selectedLanguages,
+          Secondarylanguages:sselectedLanguages
+      };
+      
+      // Display contact object in form message area
+      formMessage.textContent = "Registration successful! \n";
+      console.log(contact);
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', apiGatewayUrl, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        var messageElement = document.getElementById('form-message');
+        if (xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+		  console.log(response )
+          messageElement.textContent = response.message;
+          form.reset();
+        } else {
+          messageElement.textContent = 'Submitted!!';
+        }
+      }
+    };
+
+    var contactJson = JSON.stringify(contact);
+    xhr.send(contactJson);
+	console.log(contactJson)
+  });
+
+  function validateNotEmpty(input) {
+      if (input.value.trim() === "") {
+          input.style.border = "1px solid red";
+          return false;
+      }
+      return true;
+  }
+  function resetBorderColor(inputs) {
+      inputs.forEach(input => {
+          input.style.border = "1px solid #ccc";
+      });
+  }
+  // Function to generate a random ID
+  function generateRandomId() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+});
+</script>
